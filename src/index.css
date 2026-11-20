@@ -1,0 +1,79 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  html {
+    color-scheme: dark;
+  }
+
+  body {
+    background-color: #07090E;
+    color: #F1F5F9;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    overflow-x: hidden;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #0B0F19;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #1F2942;
+    border-radius: 4px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #00F0FF;
+  }
+}
+
+/* Glassmorphism helpers */
+.glass-panel {
+  background: rgba(16, 21, 36, 0.7);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.glass-panel-hover:hover {
+  background: rgba(26, 34, 58, 0.88);
+  border-color: rgba(0, 240, 255, 0.35);
+  box-shadow: 0 10px 30px -10px rgba(0, 240, 255, 0.15);
+  transform: translateY(-2px);
+}
+
+/* Cybernetic Neon Glows */
+.glow-cyan {
+  text-shadow: 0 0 20px rgba(0, 240, 255, 0.6);
+}
+.glow-emerald {
+  text-shadow: 0 0 20px rgba(16, 185, 129, 0.6);
+}
+.glow-purple {
+  text-shadow: 0 0 20px rgba(139, 92, 246, 0.6);
+}
+
+/* Grid Background */
+.cyber-grid {
+  background-size: 40px 40px;
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+}
+
+/* Soundwave visualizer animation */
+@keyframes soundwave {
+  0%, 100% { height: 6px; }
+  50% { height: 28px; }
+}
+
+.soundwave-bar {
+  animation: soundwave 1.2s ease-in-out infinite;
+}
