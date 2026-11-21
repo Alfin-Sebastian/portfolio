@@ -32,7 +32,15 @@ export function PortfolioProvider({ children }) {
         ]);
 
         if (firebaseData) {
-          setData(firebaseData);
+          setData({
+            ...defaultData,
+            ...firebaseData,
+            personal: { ...defaultData.personal, ...(firebaseData.personal || {}) },
+            experience: firebaseData.experience !== undefined ? firebaseData.experience : defaultData.experience,
+            education: firebaseData.education || defaultData.education,
+            events: firebaseData.events || defaultData.events,
+            interests: firebaseData.interests || defaultData.interests
+          });
         }
         // If no data in Firebase yet, defaults stay (and will be pushed on first admin save)
 
@@ -265,6 +273,145 @@ export function PortfolioProvider({ children }) {
     });
   };
 
+  // Update personal stats (Hero bento)
+  const updateStats = (statsArray) => {
+    const updated = {
+      ...data,
+      personal: {
+        ...data.personal,
+        stats: statsArray
+      }
+    };
+    saveCustomData(updated);
+  };
+
+  // Timeline: Experience Handlers
+  const addExperience = (exp) => {
+    const newExp = {
+      id: 'exp-' + Date.now(),
+      role: exp.role || 'Software Developer',
+      company: exp.company || 'Company',
+      period: exp.period || '2026 – Present',
+      status: exp.status || 'Active',
+      location: exp.location || 'Kottayam, Kerala / Remote',
+      description: exp.description || '',
+      technologies: Array.isArray(exp.technologies) ? exp.technologies : (exp.technologies ? exp.technologies.split(',').map(s => s.trim()) : [])
+    };
+    const updated = {
+      ...data,
+      experience: [newExp, ...(data.experience || [])]
+    };
+    saveCustomData(updated);
+  };
+
+  const updateExperience = (index, updatedFields) => {
+    const updatedList = (data.experience || []).map((item, idx) => {
+      if (idx === index) {
+        return {
+          ...item,
+          ...updatedFields,
+          technologies: Array.isArray(updatedFields.technologies) 
+            ? updatedFields.technologies 
+            : (updatedFields.technologies ? updatedFields.technologies.split(',').map(s => s.trim()) : item.technologies || [])
+        };
+      }
+      return item;
+    });
+    saveCustomData({
+      ...data,
+      experience: updatedList
+    });
+  };
+
+  const deleteExperience = (index) => {
+    const updatedList = (data.experience || []).filter((_, idx) => idx !== index);
+    saveCustomData({
+      ...data,
+      experience: updatedList
+    });
+  };
+
+  // Timeline: Education Handlers
+  const addEducation = (edu) => {
+    const newEdu = {
+      degree: edu.degree || 'Degree',
+      institution: edu.institution || 'College / University',
+      university: edu.university || '',
+      period: edu.period || '2023 – 2026',
+      status: edu.status || 'Completed',
+      location: edu.location || 'Kerala, India',
+      coursework: Array.isArray(edu.coursework) ? edu.coursework : (edu.coursework ? edu.coursework.split(',').map(s => s.trim()) : [])
+    };
+    const updated = {
+      ...data,
+      education: [newEdu, ...(data.education || [])]
+    };
+    saveCustomData(updated);
+  };
+
+  const updateEducation = (index, updatedFields) => {
+    const updatedList = (data.education || []).map((item, idx) => {
+      if (idx === index) {
+        return {
+          ...item,
+          ...updatedFields,
+          coursework: Array.isArray(updatedFields.coursework)
+            ? updatedFields.coursework
+            : (updatedFields.coursework ? updatedFields.coursework.split(',').map(s => s.trim()) : item.coursework || [])
+        };
+      }
+      return item;
+    });
+    saveCustomData({
+      ...data,
+      education: updatedList
+    });
+  };
+
+  const deleteEducation = (index) => {
+    const updatedList = (data.education || []).filter((_, idx) => idx !== index);
+    saveCustomData({
+      ...data,
+      education: updatedList
+    });
+  };
+
+  // Timeline: Events & Hackathons Handlers
+  const addEvent = (event) => {
+    const newEvent = {
+      title: event.title || 'Hackathon / Event',
+      type: event.type || 'State-Level Hackathon',
+      description: event.description || '',
+      tag: event.tag || 'Participant'
+    };
+    const updated = {
+      ...data,
+      events: [...(data.events || []), newEvent]
+    };
+    saveCustomData(updated);
+  };
+
+  const updateEvent = (index, updatedFields) => {
+    const updatedList = (data.events || []).map((item, idx) => {
+      if (idx === index) {
+        return { ...item, ...updatedFields };
+      }
+      return item;
+    });
+    saveCustomData({
+      ...data,
+      events: updatedList
+    });
+  };
+
+  const deleteEvent = (index) => {
+    const updatedList = (data.events || []).filter((_, idx) => idx !== index);
+    saveCustomData({
+      ...data,
+      events: updatedList
+    });
+  };
+
   // Reset to original factory defaults (also pushes defaults to Firebase)
   const resetToDefaults = () => {
     saveCustomData(defaultData);
@@ -281,6 +428,7 @@ export function PortfolioProvider({ children }) {
         logout,
         updatePasscode,
         updatePersonalInfo,
+        updateStats,
         addProject,
         updateProject,
         deleteProject,
@@ -292,6 +440,15 @@ export function PortfolioProvider({ children }) {
         addInterest,
         updateInterest,
         deleteInterest,
+        addExperience,
+        updateExperience,
+        deleteExperience,
+        addEducation,
+        updateEducation,
+        deleteEducation,
+        addEvent,
+        updateEvent,
+        deleteEvent,
         resetToDefaults
       }}
     >

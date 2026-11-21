@@ -93,10 +93,12 @@ function PortfolioContent() {
         {/* Bento Grid: Certifications & AI Mastery */}
         <CertificationsBento certs={data.certifications} />
 
-        {/* Education & Hackathons Timeline */}
+        {/* Experience & Education Journey Timeline */}
         <EducationTimeline 
-          education={data.education} 
-          events={data.events} 
+          experience={data.experience || []}
+          education={data.education || []} 
+          events={data.events || []} 
+          languages={data.languages || []}
         />
 
         {/* Beyond the Code: Passions & Mindset */}

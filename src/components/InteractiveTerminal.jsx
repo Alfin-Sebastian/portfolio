@@ -36,6 +36,7 @@ export default function InteractiveTerminal({ isOpen, onClose, data, onTriggerAd
           type: 'response',
           text: `AVAILABLE COMMANDS:
   • whoami      : Brief background & role summary
+  • timeline    : Career journey & education history
   • skills      : Full-stack skills breakdown & proficiencies
   • projects    : Major capstone & enterprise platforms
   • certs       : Certifications & verified credentials
@@ -46,6 +47,24 @@ export default function InteractiveTerminal({ isOpen, onClose, data, onTriggerAd
   • hire        : Schedule an interview / recruiter quick-connect
   • anime       : Beyond the code — manga, anime & interests
   • clear       : Clears the terminal output buffer`
+        });
+        break;
+
+      case 'timeline':
+      case 'experience':
+      case 'career':
+      case 'education':
+        const expList = (data.experience || []).map(e => `  [${e.period}] ${e.role} — ${e.company} (${e.status || 'Active'})\n  ${e.description || ''}`).join('\n\n');
+        const eduList = (data.education || []).map(ed => `  [${ed.period}] ${ed.degree} — ${ed.institution} (${ed.status})`).join('\n');
+        newHistory.push({
+          type: 'response',
+          text: `[CAREER & ACADEMIC TIMELINE]
+
+EXPERIENCE & ROLES:
+${expList || '  Freelance & Full-Stack Practice (2024 - Present)'}
+
+EDUCATION & DEGREES:
+${eduList || '  BCA (2023 - 2026), Kristu Jyothi College'}`
         });
         break;
 

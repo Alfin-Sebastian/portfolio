@@ -54,6 +54,12 @@ export default function Hero({ data, onOpenTerminal }) {
     setTimeout(() => setCopiedField(null), 2200);
   };
 
+  const fullName = data.personal?.name || 'Alfin Sebastian';
+  const nameParts = fullName.split(' ');
+  const firstName = nameParts[0] || 'Alfin';
+  const lastName = nameParts.slice(1).join(' ') || 'Sebastian';
+  const initials = (firstName[0] || 'A') + (lastName[0] || 'S');
+
   return (
     <section className="relative min-h-[92vh] pt-28 pb-16 flex items-center justify-center overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full z-10">
@@ -69,10 +75,10 @@ export default function Hero({ data, onOpenTerminal }) {
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400"></span>
               </span>
-              <span className="text-slate-300">Open to Roles & Relocation</span>
+              <span className="text-slate-300">{data.personal?.availability || 'Open to Roles & Relocation'}</span>
               <span className="text-slate-500">|</span>
               <span className="text-cyan-400 font-semibold flex items-center gap-1">
-                <MapPin className="w-3 h-3" /> Kottayam, Kerala
+                <MapPin className="w-3 h-3" /> {data.personal?.location || 'Kottayam, Kerala'}
               </span>
             </div>
 
@@ -82,16 +88,16 @@ export default function Hero({ data, onOpenTerminal }) {
                 Hi, I am
               </div>
               <h1 className="text-4xl sm:text-6xl lg:text-7xl font-display font-extrabold tracking-tight text-white leading-[1.08]">
-                Alfin <span className="bg-gradient-to-r from-cyan-400 via-sky-300 to-purple-400 bg-clip-text text-transparent">Sebastian</span>
+                {firstName} <span className="bg-gradient-to-r from-cyan-400 via-sky-300 to-purple-400 bg-clip-text text-transparent">{lastName}</span>
               </h1>
               <p className="text-lg sm:text-2xl font-light text-slate-300 max-w-2xl font-sans leading-snug">
-                AI-Native Web Developer building interactive <span className="text-white font-medium">MERN</span> and <span className="text-white font-medium">PHP/MySQL</span> web applications through modern prototyping and AI workflows.
+                {data.personal?.title || 'AI-Native Web Developer'} • <span className="text-white font-medium">{data.personal?.subtitle || 'MERN Stack & PHP/MySQL'}</span>
               </p>
             </div>
 
             {/* Bio summary */}
             <p className="text-sm sm:text-base text-slate-400 max-w-xl font-normal leading-relaxed">
-              BCA Graduate (2026) certified in <span className="text-amber-300 font-medium">Anthropic Claude 101</span> and holding <span className="text-cyan-300 font-medium">C2 Proficient English</span> fluency. Combining practical web development with AI-assisted vibe coding to ship clean, responsive digital solutions rapidly.
+              {data.personal?.bio || data.personal?.tagline || 'BCA Graduate combining practical web development with modern AI workflows to ship clean, responsive digital solutions rapidly.'}
             </p>
 
             {/* CTA Buttons */}
@@ -181,16 +187,16 @@ export default function Hero({ data, onOpenTerminal }) {
                 <div className="flex items-center gap-4">
                   <div className="relative w-16 h-16 rounded-2xl bg-gradient-to-br from-cyan-500 via-indigo-600 to-purple-600 p-[2px] shadow-lg shadow-cyan-500/20">
                     <div className="w-full h-full bg-[#0B0F19] rounded-2xl flex items-center justify-center font-display font-extrabold text-2xl text-transparent bg-clip-text bg-gradient-to-tr from-cyan-300 via-white to-purple-300">
-                      AS
+                      {initials}
                     </div>
                   </div>
                   <div>
                     <h3 className="text-lg font-bold text-white flex items-center gap-1.5">
-                      Alfin Sebastian
+                      {fullName}
                       <ShieldCheck className="w-4 h-4 text-emerald-400" title="Verified Credentials" />
                     </h3>
-                    <p className="text-xs font-mono text-cyan-300">Full-Stack Engineer</p>
-                    <p className="text-xs text-slate-400">Kristu Jyothi College, MG University</p>
+                    <p className="text-xs font-mono text-cyan-300">{data.personal?.title || 'Full-Stack Engineer'}</p>
+                    <p className="text-xs text-slate-400">{data.personal?.location || 'Kottayam, Kerala'}</p>
                   </div>
                 </div>
 

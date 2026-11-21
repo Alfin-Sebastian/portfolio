@@ -260,6 +260,19 @@ export const portfolioData = {
     }
   ],
 
+  experience: [
+    {
+      id: "freelance-fullstack",
+      role: "Full-Stack Web Developer (Freelance / Practice)",
+      company: "Independent Projects",
+      period: "2024 – Present",
+      status: "Active",
+      location: "Kottayam, Kerala / Remote",
+      description: "Designing and developing full-stack web applications with MERN Stack and PHP/MySQL, focusing on modern UI design, database integrations, and rapid AI-assisted development.",
+      technologies: ["React.js", "Node.js", "Express.js", "MongoDB", "PHP", "MySQL", "Tailwind CSS"]
+    }
+  ],
+
   education: [
     {
       degree: "Bachelor of Computer Applications (BCA)",
