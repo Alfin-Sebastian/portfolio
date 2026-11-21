@@ -16,7 +16,8 @@ import {
   Plus,
   ShieldAlert,
   Edit2,
-  ExternalLink
+  ExternalLink,
+  Heart
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { usePortfolio } from '../context/PortfolioContext';
@@ -34,6 +35,9 @@ export default function AdminDashboard({ isOpen, onClose }) {
     deleteCertification, 
     addSkill, 
     deleteSkill,
+    addInterest,
+    updateInterest,
+    deleteInterest,
     updatePasscode,
     resetToDefaults 
   } = usePortfolio();
@@ -43,6 +47,15 @@ export default function AdminDashboard({ isOpen, onClose }) {
   const [successMsg, setSuccessMsg] = useState('');
   const [editingCertId, setEditingCertId] = useState(null);
   const [editingProjectId, setEditingProjectId] = useState(null);
+  const [editingInterestIndex, setEditingInterestIndex] = useState(null);
+
+  // Interest Form state
+  const [interestForm, setInterestForm] = useState({
+    category: '',
+    description: '',
+    vibe: '',
+    icon: 'Sparkles'
+  });
 
   // Profile Form state
   const [profileForm, setProfileForm] = useState({
@@ -263,6 +276,58 @@ export default function AdminDashboard({ isOpen, onClose }) {
     showNotification(`Skill "${skillForm.name}" added to skills radar!`);
   };
 
+  const handleSaveInterest = (e) => {
+    e.preventDefault();
+    if (!interestForm.category || !interestForm.description) return;
+
+    if (editingInterestIndex !== null) {
+      updateInterest(editingInterestIndex, {
+        category: interestForm.category,
+        description: interestForm.description,
+        vibe: interestForm.vibe,
+        icon: interestForm.icon || 'Sparkles'
+      });
+      showNotification('Hobby / Passion updated successfully in cloud!');
+      setEditingInterestIndex(null);
+    } else {
+      addInterest({
+        category: interestForm.category,
+        description: interestForm.description,
+        vibe: interestForm.vibe,
+        icon: interestForm.icon || 'Sparkles'
+      });
+      showNotification('New hobby / passion added to showcase!');
+      confetti({ particleCount: 30, spread: 50, origin: { y: 0.6 } });
+    }
+
+    setInterestForm({
+      category: '',
+      description: '',
+      vibe: '',
+      icon: 'Sparkles'
+    });
+  };
+
+  const startEditingInterest = (item, index) => {
+    setEditingInterestIndex(index);
+    setInterestForm({
+      category: item.category || '',
+      description: item.description || '',
+      vibe: item.vibe || '',
+      icon: item.icon || 'Sparkles'
+    });
+  };
+
+  const cancelEditingInterest = () => {
+    setEditingInterestIndex(null);
+    setInterestForm({
+      category: '',
+      description: '',
+      vibe: '',
+      icon: 'Sparkles'
+    });
+  };
+
   const handlePasscodeChange = (e) => {
     e.preventDefault();
     if (newPass.length < 4) {
@@ -356,6 +421,7 @@ export default function AdminDashboard({ isOpen, onClose }) {
               { id: 'projects', name: 'Manage Projects', icon: FolderPlus },
               { id: 'certs', name: 'Certifications', icon: Award },
               { id: 'skills', name: 'Skills Radar', icon: Code2 },
+              { id: 'interests', name: 'Hobbies & Passions', icon: Heart },
               { id: 'export', name: 'Export & Code Sync', icon: Download },
               { id: 'security', name: 'Passcode & Reset', icon: Key },
             ].map((tab) => {
@@ -666,7 +732,7 @@ export default function AdminDashboard({ isOpen, onClose }) {
                     )}
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                     <div className="space-y-1">
                       <label className="text-xs font-mono text-slate-300">Certification Title *</label>
                       <input
@@ -686,6 +752,17 @@ export default function AdminDashboard({ isOpen, onClose }) {
                         value={certForm.issuer}
                         onChange={(e) => setCertForm({ ...certForm, issuer: e.target.value })}
                         placeholder="Anthropic, Google, Forage, etc."
+                        className="w-full px-3 py-2 rounded-xl bg-dark-850 border border-white/10 text-white text-xs focus:border-cyan-400 outline-none"
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <label className="text-xs font-mono text-slate-300">Year / Date *</label>
+                      <input
+                        type="text"
+                        required
+                        value={certForm.date}
+                        onChange={(e) => setCertForm({ ...certForm, date: e.target.value })}
+                        placeholder="e.g. 2024, 2025, or 2026"
                         className="w-full px-3 py-2 rounded-xl bg-dark-850 border border-white/10 text-white text-xs focus:border-cyan-400 outline-none"
                       />
                     </div>
@@ -936,7 +1013,150 @@ export default function AdminDashboard({ isOpen, onClose }) {
               </div>
             )}
 
-            {/* 5. Export Tab */}
+            {/* 5. Hobbies & Passions Tab */}
+            {activeTab === 'interests' && (
+              <div className="space-y-8 max-w-3xl">
+                {/* Add / Edit Form */}
+                <form onSubmit={handleSaveInterest} className="p-5 rounded-2xl bg-dark-900/90 border border-white/10 space-y-4">
+                  <div className="flex items-center justify-between border-b border-white/10 pb-2">
+                    <h4 className="text-sm font-bold text-white flex items-center gap-2">
+                      <Heart className="w-4 h-4 text-pink-400" />
+                      <span>{editingInterestIndex !== null ? 'Edit Hobby / Passion' : 'Add New Hobby & Creative Interest'}</span>
+                    </h4>
+                    {editingInterestIndex !== null && (
+                      <span className="text-[11px] font-mono text-cyan-400 bg-cyan-950 px-2 py-0.5 rounded border border-cyan-500/30">
+                        Editing Item #{editingInterestIndex + 1}
+                      </span>
+                    )}
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div className="space-y-1">
+                      <label className="text-xs font-mono text-slate-300">Category Name *</label>
+                      <input
+                        type="text"
+                        required
+                        value={interestForm.category}
+                        onChange={(e) => setInterestForm({ ...interestForm, category: e.target.value })}
+                        placeholder="e.g. Reading Manhwas, Video Games"
+                        className="w-full px-3 py-2 rounded-xl bg-dark-850 border border-white/10 text-white text-xs focus:border-cyan-400 outline-none"
+                      />
+                    </div>
+
+                    <div className="space-y-1">
+                      <label className="text-xs font-mono text-slate-300">Icon</label>
+                      <select
+                        value={interestForm.icon}
+                        onChange={(e) => setInterestForm({ ...interestForm, icon: e.target.value })}
+                        className="w-full px-3 py-2 rounded-xl bg-dark-850 border border-white/10 text-white text-xs focus:border-cyan-400 outline-none"
+                      >
+                        <option value="BookOpen">📖 BookOpen (Reading / Manga)</option>
+                        <option value="Film">🎬 Film (Anime / Cinema)</option>
+                        <option value="Activity">⚽ Activity (Sports / Football)</option>
+                        <option value="Cpu">🤖 Cpu (AI / Technology)</option>
+                        <option value="Sparkles">✨ Sparkles (Creative)</option>
+                        <option value="Heart">❤️ Heart (Passions)</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div className="space-y-1">
+                    <label className="text-xs font-mono text-slate-300">Core Inspiration / Mindset Vibe</label>
+                    <input
+                      type="text"
+                      value={interestForm.vibe}
+                      onChange={(e) => setInterestForm({ ...interestForm, vibe: e.target.value })}
+                      placeholder="e.g. Continuous leveling up & determination"
+                      className="w-full px-3 py-2 rounded-xl bg-dark-850 border border-white/10 text-white text-xs focus:border-cyan-400 outline-none"
+                    />
+                  </div>
+
+                  <div className="space-y-1">
+                    <label className="text-xs font-mono text-slate-300">Personal Description *</label>
+                    <textarea
+                      rows={2}
+                      required
+                      value={interestForm.description}
+                      onChange={(e) => setInterestForm({ ...interestForm, description: e.target.value })}
+                      placeholder="What you love about this hobby and how it reflects your character..."
+                      className="w-full px-3 py-2 rounded-xl bg-dark-850 border border-white/10 text-white text-xs focus:border-cyan-400 outline-none"
+                    />
+                  </div>
+
+                  <div className="flex items-center gap-2 pt-1">
+                    <button
+                      type="submit"
+                      className="px-4 py-2 rounded-xl bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-400 hover:to-purple-500 text-white text-xs font-semibold flex items-center gap-1.5 shadow-md shadow-pink-500/20"
+                    >
+                      {editingInterestIndex !== null ? <Save className="w-3.5 h-3.5" /> : <Plus className="w-3.5 h-3.5" />}
+                      <span>{editingInterestIndex !== null ? 'Save Hobby Updates' : 'Publish Hobby to Live Site'}</span>
+                    </button>
+                    {editingInterestIndex !== null && (
+                      <button
+                        type="button"
+                        onClick={cancelEditingInterest}
+                        className="px-3 py-2 rounded-xl bg-dark-850 hover:bg-dark-800 text-slate-300 text-xs font-mono border border-white/10"
+                      >
+                        Cancel
+                      </button>
+                    )}
+                  </div>
+                </form>
+
+                {/* Existing Hobbies List */}
+                <div className="space-y-3">
+                  <h4 className="text-xs font-mono uppercase tracking-wider text-slate-400">
+                    Existing Passions ({(data.interests || []).length})
+                  </h4>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {(data.interests || []).map((item, idx) => (
+                      <div
+                        key={idx}
+                        className="p-4 rounded-xl bg-dark-900 border border-white/10 flex flex-col justify-between gap-3"
+                      >
+                        <div>
+                          <div className="text-xs font-bold text-white flex items-center justify-between">
+                            <span>{item.category}</span>
+                            <span className="text-[10px] font-mono text-cyan-400">{item.icon}</span>
+                          </div>
+                          <p className="text-xs text-slate-300 mt-1 line-clamp-2">{item.description}</p>
+                          {item.vibe && (
+                            <div className="text-[11px] font-mono text-purple-300 mt-2">
+                              ✨ {item.vibe}
+                            </div>
+                          )}
+                        </div>
+
+                        <div className="flex items-center justify-end gap-2 pt-2 border-t border-white/5">
+                          <button
+                            type="button"
+                            onClick={() => startEditingInterest(item, idx)}
+                            className="p-1.5 rounded-lg bg-cyan-950/60 hover:bg-cyan-900 text-cyan-300 border border-cyan-500/30 text-xs flex items-center gap-1 font-mono px-2"
+                            title="Edit Hobby"
+                          >
+                            <Edit2 className="w-3.5 h-3.5" />
+                            <span>Edit</span>
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              deleteInterest(idx);
+                              showNotification(`Hobby "${item.category}" deleted`);
+                            }}
+                            className="p-1.5 rounded-lg bg-rose-950/60 hover:bg-rose-900 text-rose-300 border border-rose-500/30 text-xs"
+                            title="Delete Hobby"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* 6. Export Tab */}
             {activeTab === 'export' && (
               <div className="space-y-6 max-w-2xl">
                 <div className="p-5 rounded-2xl bg-dark-900/90 border border-white/10 space-y-4">

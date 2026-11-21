@@ -227,6 +227,44 @@ export function PortfolioProvider({ children }) {
     saveCustomData(updated);
   };
 
+  // Add new interest / hobby
+  const addInterest = (interest) => {
+    const newInterest = {
+      category: interest.category || 'New Interest',
+      icon: interest.icon || 'Sparkles',
+      description: interest.description || '',
+      vibe: interest.vibe || 'Creative Focus'
+    };
+    const updated = {
+      ...data,
+      interests: [...(data.interests || []), newInterest]
+    };
+    saveCustomData(updated);
+  };
+
+  // Update interest / hobby
+  const updateInterest = (index, updatedFields) => {
+    const updatedInterests = (data.interests || []).map((item, idx) => {
+      if (idx === index) {
+        return { ...item, ...updatedFields };
+      }
+      return item;
+    });
+    saveCustomData({
+      ...data,
+      interests: updatedInterests
+    });
+  };
+
+  // Delete interest / hobby
+  const deleteInterest = (index) => {
+    const updatedInterests = (data.interests || []).filter((_, idx) => idx !== index);
+    saveCustomData({
+      ...data,
+      interests: updatedInterests
+    });
+  };
+
   // Reset to original factory defaults (also pushes defaults to Firebase)
   const resetToDefaults = () => {
     saveCustomData(defaultData);
@@ -251,6 +289,9 @@ export function PortfolioProvider({ children }) {
         deleteCertification,
         addSkill,
         deleteSkill,
+        addInterest,
+        updateInterest,
+        deleteInterest,
         resetToDefaults
       }}
     >

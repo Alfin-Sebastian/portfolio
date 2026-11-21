@@ -8,9 +8,12 @@ export default function PassionsSection({ interests }) {
       case 'Film': return <Film className="w-5 h-5 text-cyan-400" />;
       case 'Activity': return <Activity className="w-5 h-5 text-emerald-400" />;
       case 'Cpu': return <Cpu className="w-5 h-5 text-amber-400" />;
+      case 'Heart': return <Heart className="w-5 h-5 text-pink-400" />;
       default: return <Sparkles className="w-5 h-5 text-cyan-400" />;
     }
   };
+
+  const list = interests || [];
 
   return (
     <section id="passions" className="py-20 relative">
@@ -30,9 +33,9 @@ export default function PassionsSection({ interests }) {
           </p>
         </div>
 
-        {/* 4 Cards Grid */}
+        {/* Dynamic Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {interests.map((item, idx) => (
+          {list.map((item, idx) => (
             <div
               key={idx}
               className="p-6 rounded-3xl glass-panel glass-panel-hover border border-white/10 flex flex-col justify-between space-y-4 transition-all"
