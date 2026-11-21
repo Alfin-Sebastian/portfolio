@@ -39,7 +39,8 @@ export function PortfolioProvider({ children }) {
             experience: firebaseData.experience !== undefined ? firebaseData.experience : defaultData.experience,
             education: firebaseData.education || defaultData.education,
             events: firebaseData.events || defaultData.events,
-            interests: firebaseData.interests || defaultData.interests
+            interests: firebaseData.interests || defaultData.interests,
+            languages: firebaseData.languages || defaultData.languages
           });
         }
         // If no data in Firebase yet, defaults stay (and will be pushed on first admin save)
@@ -412,6 +413,38 @@ export function PortfolioProvider({ children }) {
     });
   };
 
+  const addLanguage = (lang) => {
+    const currentList = data.languages || defaultData.languages || [];
+    const updated = {
+      ...data,
+      languages: [...currentList, lang]
+    };
+    saveCustomData(updated);
+  };
+
+  const updateLanguage = (index, updatedFields) => {
+    const currentList = data.languages || defaultData.languages || [];
+    const updatedList = currentList.map((item, idx) => {
+      if (idx === index) {
+        return { ...item, ...updatedFields };
+      }
+      return item;
+    });
+    saveCustomData({
+      ...data,
+      languages: updatedList
+    });
+  };
+
+  const deleteLanguage = (index) => {
+    const currentList = data.languages || defaultData.languages || [];
+    const updatedList = currentList.filter((_, idx) => idx !== index);
+    saveCustomData({
+      ...data,
+      languages: updatedList
+    });
+  };
+
   // Reset to original factory defaults (also pushes defaults to Firebase)
   const resetToDefaults = () => {
     saveCustomData(defaultData);
@@ -449,6 +482,9 @@ export function PortfolioProvider({ children }) {
         addEvent,
         updateEvent,
         deleteEvent,
+        addLanguage,
+        updateLanguage,
+        deleteLanguage,
         resetToDefaults
       }}
     >

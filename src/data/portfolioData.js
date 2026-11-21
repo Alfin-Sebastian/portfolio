@@ -344,7 +344,19 @@ export const portfolioData = {
   ],
 
   languages: [
-    { name: "English", level: "Fluent (EF SET C2 Proficient)", flag: "🌐" },
-    { name: "Malayalam", level: "Native", flag: "🌴" }
+    {
+      name: "English",
+      level: "Professional & Technical Working Proficiency",
+      proficiency: "Fluent (EF SET C2 Proficient)",
+      badge: "C2 Top Tier",
+      flag: "🌐"
+    },
+    {
+      name: "Malayalam",
+      level: "Mother Tongue",
+      proficiency: "Native Speaker",
+      badge: "Native",
+      flag: "🌴"
+    }
   ]
 };
