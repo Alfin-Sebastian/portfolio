@@ -65,7 +65,7 @@ export default function AdminLoginModal({ isOpen, onClose, onLoginSuccess }) {
           <div className="space-y-1.5">
             <label className="text-xs font-mono text-slate-300 flex items-center justify-between">
               <span>Security Passcode</span>
-              <span className="text-[10px] text-slate-500">(Default: alfin2026)</span>
+              <span className="text-[10px] text-slate-500">(Default:)</span>
             </label>
             <div className="relative">
               <input
